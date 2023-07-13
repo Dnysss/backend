@@ -13,6 +13,10 @@ const Card = mongoose.model(
                 type: String,
                 required: true
             },
+            description: {
+                type: String,
+                required: true
+            },
             user: Object,
         }, {timestamps: true}
     )

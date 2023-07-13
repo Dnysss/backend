@@ -9,7 +9,7 @@ const getUserByToken = require('../helpers/get-user-by-token');
 module.exports = class CardController {
     //create card
     static async create(req, res) {
-        const {name, category} = req.body;
+        const {name, category, description} = req.body;
 
 
         //Validations
@@ -23,6 +23,11 @@ module.exports = class CardController {
             return;
         }
 
+        if(!description) {
+            res.status(422).json({message: "A descrição é obrigatória!"});
+            return;
+        }
+
         //get user
         const token = getToken(req);
         const user = await getUserByToken(token);
@@ -31,6 +36,7 @@ module.exports = class CardController {
         const card = new Card({
             name,
             category,
+            description,
             user: {
                 _id: user._id,
             }
@@ -112,7 +118,7 @@ module.exports = class CardController {
 
         const id = req.params.id;
 
-        const { name, category } = req.body;
+        const { name, category, description } = req.body;
 
         const updatedData = {};
 
@@ -146,6 +152,13 @@ module.exports = class CardController {
             return;
         } else {
             updatedData.category = category;
+        }
+
+        if(!description) {
+            res.status(422).json({message: "A descrição é obrigatória!"});
+            return;
+        } else {
+            updatedData.description = description;
         }
 
         await Card.findByIdAndUpdate(id, updatedData);
